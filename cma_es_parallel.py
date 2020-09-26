@@ -5,8 +5,13 @@ from torch.nn.utils import parameters_to_vector, vector_to_parameters
 import pprint
 from multiprocessing import Pool, Queue, Manager, cpu_count
 from functools import partial
-from cma_es import Walker_AI, eval_parameters
+from train import Walker_AI, eval_agent
 import argparse
+
+
+def eval_parameters(param, agent, env, duration: int):
+    vector_to_parameters(torch.Tensor(param), agent.parameters())
+    return -eval_agent(agent, env, duration)
 
 
 def evaluation_process(param, resource_q: Queue, duration: int):
@@ -55,9 +60,9 @@ while not es.stop():
     with Pool(N_WORKERS) as p:
         function_values = p.map(evaluating_func, solutions)
     es.tell(solutions, function_values)
-    es.logger.add()  # write data to disc to be plotted
+    # es.logger.add()  # write data to disc to be plotted
     es.disp()
 
 vector_to_parameters(torch.Tensor(es.result[0]), agent.parameters())
 torch.save(agent.state_dict(), args.file)
-cma.plot()
+# cma.plot()
