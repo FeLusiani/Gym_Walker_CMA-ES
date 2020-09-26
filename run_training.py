@@ -74,7 +74,7 @@ def create_evaluator(duration, multiproc=True) -> Evaluator:
 parser = argparse.ArgumentParser(description="Train model with cma-es")
 parser.add_argument("--duration", help="duration of episode", type=int, default=500)
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
-parser.add_argument("--std", help="starting std", type=float, default=0.02)
+parser.add_argument("--std", help="starting std", type=float, default=0.3)
 parser.add_argument("--file", help="file to save model", default="./walker_0.pth")
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
