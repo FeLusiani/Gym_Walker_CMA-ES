@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description="Test model")
 parser.add_argument("--duration", help="duration of episode", default=500)
 parser.add_argument("--n_gens", help="n of generations", default=50)
 parser.add_argument("--std", help="starting std", default=0.02)
-parser.add_argument("file", help="file to save model", default="./walker_0.pth")
+parser.add_argument("--file", help="file to save model", default="./walker_0.pth")
 args = parser.parse_args()
 
 
