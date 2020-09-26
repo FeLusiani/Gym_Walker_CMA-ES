@@ -6,6 +6,7 @@ import pprint
 from multiprocessing import Pool, Queue, Manager, cpu_count
 from functools import partial
 from cma_es import Walker_AI, eval_parameters
+import argparse
 
 
 def evaluation_process(param, resource_q: Queue, duration: int):
@@ -16,14 +17,21 @@ def evaluation_process(param, resource_q: Queue, duration: int):
     return value
 
 
+parser = argparse.ArgumentParser(description="Test model")
+parser.add_argument("--duration", help="duration of episode", default=500)
+parser.add_argument("--n_gens", help="n of generations", default=50)
+parser.add_argument("--std", help="starting std", default=0.02)
+parser.add_argument("file", help="file to save model", default="./walker_0.pth")
+args = parser.parse_args()
+
+
+torch.set_grad_enabled(False)
 x0 = parameters_to_vector(Walker_AI().parameters())
 opts = cma.CMAOptions()
 # pprint.pprint(cma.CMAOptions().match('size'))
-opts.set("maxiter", 30)
+opts.set("maxiter", args.n_gens)
 
-es = cma.CMAEvolutionStrategy(x0, 0.02, opts)
-# gym env
-duration = 250
+es = cma.CMAEvolutionStrategy(x0, args.std, opts)
 
 
 N_WORKERS = cpu_count()
@@ -36,7 +44,7 @@ for _ in range(N_WORKERS):
     resource_queue.put((agent, env))
 
 evaluating_func = partial(
-    evaluation_process, resource_q=resource_queue, duration=duration
+    evaluation_process, resource_q=resource_queue, duration=args.duration
 )
 
 while not es.stop():
@@ -51,5 +59,5 @@ while not es.stop():
     es.disp()
 
 vector_to_parameters(torch.Tensor(es.result[0]), agent.parameters())
-torch.save(agent.state_dict(), "walker_0.pth")
+torch.save(agent.state_dict(), args.file)
 cma.plot()
