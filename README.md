@@ -1,4 +1,10 @@
-# Setup
+# Bipedal Walker trained with CMA-ES
+
+This is a project I'm currently working on.
+
+A feed-forward neural network is trained to pilot a Bipedal Walker (one of OpenAI Gym environments) using a CMA Evolutionary Strategy. 
+
+## Setup
 
 To install Gym (and the box2 environments) from source:
 
@@ -14,7 +20,7 @@ pip install -e .
 pip install -e .[box2d]
 ```
 
-# Usage
+## Usage
 
 Use ```run_training.py``` to train and save the model.
 ```
