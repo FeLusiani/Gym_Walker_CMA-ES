@@ -8,7 +8,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Test model")
 
 parser.add_argument("load_dir", help="path of directory to load")
-parser.add_argument("--duration", help="duration of episode", default=1000)
+parser.add_argument("--duration", help="duration of episode", type=int, default=1000)
 
 args = parser.parse_args()
 load_dir = Path(args.load_dir)
