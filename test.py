@@ -7,11 +7,11 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Test model")
 
-parser.add_argument("load_dir", help="path of directory to load")
+parser.add_argument("model_file", help="path of directory to load")
 parser.add_argument("--duration", help="duration of episode", type=int, default=1000)
 
 args = parser.parse_args()
-load_dir = Path(args.load_dir)
+model_file = Path(args.model_file)
 duration = args.duration
 
 # gym env
@@ -21,7 +21,7 @@ for i in range(100):
     status = env.reset()[:14]
     # winner = load_agent(load_dir, i)
     ##########################################################3
-    state_dict = torch.load(load_dir)
+    state_dict = torch.load(model_file)
     agent = Walker_AI()
     for param in agent.parameters():
         param.requires_grad = False
