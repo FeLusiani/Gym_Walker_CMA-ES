@@ -22,7 +22,7 @@ def evaluation_process(param, resource_q: Queue, duration: int):
     return value
 
 
-parser = argparse.ArgumentParser(description="Test model")
+parser = argparse.ArgumentParser(description="Train model with cma-es")
 parser.add_argument("--duration", help="duration of episode", default=500)
 parser.add_argument("--n_gens", help="n of generations", default=50)
 parser.add_argument("--std", help="starting std", default=0.02)
