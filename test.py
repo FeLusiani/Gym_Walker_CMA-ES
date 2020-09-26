@@ -7,7 +7,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Test model")
 
-parser.add_argument("model_file", help="path of directory to load")
+parser.add_argument("model_file", help="file to load as model")
 parser.add_argument("--duration", help="duration of episode", type=int, default=1000)
 
 args = parser.parse_args()
@@ -19,7 +19,6 @@ env = gym.make("BipedalWalker-v3")
 
 for i in range(100):
     status = env.reset()[:14]
-    # winner = load_agent(load_dir, i)
     ##########################################################3
     state_dict = torch.load(model_file)
     agent = Walker_AI()
