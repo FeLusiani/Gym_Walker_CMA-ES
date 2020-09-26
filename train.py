@@ -21,7 +21,7 @@ class Walker_AI(torch.nn.Module):
 
         for param in self.parameters():
             param.requires_grad = False
-        
+
         for layer in self.net:
             if type(layer) == torch.nn.Linear:
                 layer.weight.data.fill_(0.0)
@@ -60,13 +60,24 @@ def eval_agent(agent, env, duration):
         action_np = action_t.numpy()
         new_status, reward, done, _ = env.step(action_np)
 
-        tot_reward = tot_reward + reward # - 0.0035 * (new_status[8] + new_status[13])
+        tot_reward = tot_reward + reward  # - 0.0035 * (new_status[8] + new_status[13])
         status = new_status[:14]
 
         if done:
             break
 
     return tot_reward
+
+
+def load_agent(dir: Path, id: int = 0) -> Walker_AI:
+    file = dir / f"agent_file{id}.pth"
+    state_dict = torch.load(file)
+    agent = Walker_AI()
+    for param in agent.parameters():
+        param.requires_grad = False
+    agent.load_state_dict(state_dict)
+
+    return agent
 
 
 def run_agents(agents, env, duration=250):
