@@ -29,7 +29,7 @@ class Evaluator(ABC):
         raise NotImplementedError
 
 
-class Parallel_evaluator(Evaluator):
+class _Parallel_evaluator(Evaluator):
     def __init__(self, duration):
         self._N_WORKERS = cpu_count()
         self._manager = Manager()
@@ -50,7 +50,7 @@ class Parallel_evaluator(Evaluator):
         return function_values
 
 
-class Normal_evaluator(Evaluator):
+class _Normal_evaluator(Evaluator):
     def __init__(self, duration):
         self.duration = duration
         self._env = gym.make("BipedalWalker-v3")
@@ -66,9 +66,9 @@ class Normal_evaluator(Evaluator):
 
 def create_evaluator(duration, multiproc=True) -> Evaluator:
     if multiproc:
-        return Parallel_evaluator(duration)
+        return _Parallel_evaluator(duration)
     else:
-        return Normal_evaluator(duration)
+        return _Normal_evaluator(duration)
 
 
 parser = argparse.ArgumentParser(description="Train model with cma-es")
