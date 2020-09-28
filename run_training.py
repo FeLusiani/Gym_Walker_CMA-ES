@@ -79,7 +79,7 @@ parser.add_argument("--file", help="file to save model", default="./walker_0.pth
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
 )
-parser.add_argument("--logging", help="disable multiprocessing", action="store_true")
+parser.add_argument("--logging", help="enable cma logging", action="store_true")
 args = parser.parse_args()
 
 torch.set_grad_enabled(False)
