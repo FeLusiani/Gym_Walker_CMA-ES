@@ -73,7 +73,7 @@ def create_evaluator(duration, multiproc=True) -> Evaluator:
 
 
 def create_save_path(args) -> Path:
-    filename = args.filename
+    filename = args.name
     if filename is None:
         filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std}.pth"
     
@@ -84,7 +84,7 @@ parser = argparse.ArgumentParser(description="Train model with cma-es")
 parser.add_argument("--duration", help="duration of episode", type=int, default=500)
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
 parser.add_argument("--std", help="starting std", type=float, default=0.3)
-parser.add_argument("--filename", help="filename to save model")
+parser.add_argument("--name", help="filename to save model")
 parser.add_argument("--dir", help="dir path to save model", default=".")
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
