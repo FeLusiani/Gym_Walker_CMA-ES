@@ -8,6 +8,7 @@ from functools import partial
 from model import Walker_AI, eval_agent
 import argparse
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 
 def eval_parameters(param, agent, env, duration: int):
@@ -71,11 +72,20 @@ def create_evaluator(duration, multiproc=True) -> Evaluator:
         return _Normal_evaluator(duration)
 
 
+def create_save_path(args) -> Path:
+    filename = args.filename
+    if filename is None:
+        filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std}.pth"
+    
+    return Path(args.dir) / Path(filename)
+
+
 parser = argparse.ArgumentParser(description="Train model with cma-es")
 parser.add_argument("--duration", help="duration of episode", type=int, default=500)
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
 parser.add_argument("--std", help="starting std", type=float, default=0.3)
-parser.add_argument("--file", help="file to save model", default="./walker_0.pth")
+parser.add_argument("--filename", help="filename to save model")
+parser.add_argument("--dir", help="dir path to save model", default=".")
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
 )
@@ -102,5 +112,6 @@ while not es.stop():
 
 agent = Walker_AI()
 vector_to_parameters(torch.Tensor(es.result[0]), agent.parameters())
-torch.save(agent.state_dict(), args.file)
+file_path = create_save_path(args)
+torch.save(agent.state_dict(), file_path)
 # cma.plot()
