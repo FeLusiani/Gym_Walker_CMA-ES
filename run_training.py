@@ -11,17 +11,20 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 
-def eval_parameters(param, agent, env, duration: int):
+# global so it can be used with multi-processing
+global agent
+agent = Walker_AI()
+# global so it can be used with multi-processing
+global env
+env = gym.make("BipedalWalker-v3")
+
+
+def eval_parameters(param, duration: int):
+    global agent
+    global env
+    env.reset()
     vector_to_parameters(torch.Tensor(param), agent.parameters())
     return -eval_agent(agent, env, duration)
-
-
-def evaluation_process(param, resource_q: Queue, duration: int):
-    resource = resource_q.get()
-    agent, env = resource
-    value = eval_parameters(param, agent, env, duration)
-    resource_q.put(resource)
-    return value
 
 
 class Evaluator(ABC):
@@ -32,40 +35,28 @@ class Evaluator(ABC):
 
 class _Parallel_evaluator(Evaluator):
     def __init__(self, duration):
-        self._N_WORKERS = cpu_count()
-        self._manager = Manager()
-        self._r_queue = self._manager.Queue()
-
-        for _ in range(self._N_WORKERS):
-            env = gym.make("BipedalWalker-v3")
-            agent = Walker_AI()
-            self._r_queue.put((agent, env))
-
-        self._evaluating_func = partial(
-            evaluation_process, resource_q=self._r_queue, duration=duration
-        )
+        self._pool = Pool()
+        self._eval_func = partial(eval_parameters, duration=duration)
 
     def eval(self, solutions: list) -> list:
-        with Pool(self._N_WORKERS) as p:
-            function_values = p.map(self._evaluating_func, solutions)
+        function_values = self._pool.map(self._eval_func, solutions)
         return function_values
+
+    def __del__(self):
+        self._pool.close()
+        self._pool.join()
 
 
 class _Normal_evaluator(Evaluator):
     def __init__(self, duration):
         self.duration = duration
-        self._env = gym.make("BipedalWalker-v3")
-        self._agent = Walker_AI()
-        self._evaluating_func = lambda x: eval_parameters(
-            x, self._agent, self._env, self.duration
-        )
 
     def eval(self, solutions: list) -> list:
-        function_values = [self._evaluating_func(x) for x in solutions]
+        function_values = [eval_parameters(x, self.duration) for x in solutions]
         return function_values
 
 
-def create_evaluator(duration, multiproc=True) -> Evaluator:
+def create_evaluator(duration: int, multiproc=True) -> Evaluator:
     if multiproc:
         return _Parallel_evaluator(duration)
     else:
@@ -73,10 +64,24 @@ def create_evaluator(duration, multiproc=True) -> Evaluator:
 
 
 def create_save_path(args) -> Path:
+    """
+    Generates saving path from script arguments.
+    The path will be [args.dir]/[model_name], where
+    [model_name] is either args.filename (if set),
+    or a generated name reporting the training parameters.
+
+    Args:
+        args : arguments of the script (output of parse_args function).
+
+    Returns:
+        Path: saving path for the model
+    """
+    dir_path = Path(args.dir)
+    dir_path.mkdir(exist_ok=True)
     filename = args.name
     if filename is None:
-        filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std}.pth"
-    
+        filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std:.2E}.pth"
+
     return Path(args.dir) / Path(filename)
 
 
@@ -92,15 +97,20 @@ parser.add_argument(
 parser.add_argument("--logging", help="enable cma logging", action="store_true")
 args = parser.parse_args()
 
+
+# we don't need gradient computing
 torch.set_grad_enabled(False)
+# starting solution is Walker_AI() default parameters
 x0 = parameters_to_vector(Walker_AI().parameters())
 opts = cma.CMAOptions()
-# pprint.pprint(cma.CMAOptions().match('size'))
+# to find other CMA options use
+# pprint.pprint(cma.CMAOptions().match('[keyword]'))
+
+# set max number of iterations (n of generations)
 opts.set("maxiter", args.n_gens)
 
 es = cma.CMAEvolutionStrategy(x0, args.std, opts)
 evaluator = create_evaluator(args.duration, not args.no_multiproc)
-
 
 while not es.stop():
     solutions = es.ask()
@@ -110,7 +120,6 @@ while not es.stop():
         es.logger.add()  # write data to disc to be plotted
     es.disp()
 
-agent = Walker_AI()
 vector_to_parameters(torch.Tensor(es.result[0]), agent.parameters())
 file_path = create_save_path(args)
 torch.save(agent.state_dict(), file_path)
