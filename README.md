@@ -6,16 +6,14 @@ A feed-forward neural network is trained to pilot a [Bipedal Walker](https://gym
 
 ## Setup
 
-To install Gym (and the box2 environments) from source:
-
-- Install gym (box2d environments)
+- Install Gym (and the box2 environments) from source:
 ```
 git clone https://github.com/openai/gym
 cd gym
 pip install -e .[box2d]
 ```
 
-To install the rest of the required packages (including ```torch``` and ```pycma```):
+- Install the rest of the required packages (including ```torch``` and ```pycma```):
 
 ```
 pip install -r ./Gym_Walker_CMA-ES/requirements.txt
