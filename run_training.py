@@ -122,5 +122,6 @@ while not es.stop():
 
 vector_to_parameters(torch.Tensor(es.result[0]), agent.parameters())
 file_path = create_save_path(args)
+print(f"\n Saving model at {file_path}")
 torch.save(agent.state_dict(), file_path)
 # cma.plot()

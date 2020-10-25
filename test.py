@@ -16,18 +16,16 @@ duration = args.duration
 
 # gym env
 env = gym.make("BipedalWalker-v3")
+# we don't need gradient computing
+torch.set_grad_enabled(False)
 
 for i in range(100):
     status = env.reset()[:14]
-    ##########################################################3
     state_dict = torch.load(model_file)
     agent = Walker_AI()
-    for param in agent.parameters():
-        param.requires_grad = False
     agent.load_state_dict(state_dict)
-    ##############################################################
 
-    print(f"Individual {i}")
+    print(f"Test episode {i}")
     for _ in range(duration):
         action_t = agent(torch.Tensor(status))
         action_np = action_t.numpy()
