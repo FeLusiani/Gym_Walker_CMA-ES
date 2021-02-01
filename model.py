@@ -36,7 +36,8 @@ def eval_agent(agent, env, duration):
         action_np = action_t.numpy()
         new_status, reward, done, _ = env.step(action_np)
 
-        tot_reward = tot_reward + reward  # - 0.0035 * (new_status[8] + new_status[13])
+        # subtract reward for leg contact with the ground
+        tot_reward = tot_reward + reward  - 0.035 * (new_status[8] + new_status[13])
         status = new_status[:14]
 
         if done:
