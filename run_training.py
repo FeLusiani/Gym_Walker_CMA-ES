@@ -26,6 +26,9 @@ def eval_parameters(param, duration: int):
     vector_to_parameters(torch.Tensor(param), agent.parameters())
     return -eval_agent(agent, env, duration)
 
+# the reason for a Evaluator object instead of just an evaluator function
+# is to avoid the creation and destruction of a Pool for parallel computing
+# at each evaluation cycle
 
 class Evaluator(ABC):
     @abstractmethod
