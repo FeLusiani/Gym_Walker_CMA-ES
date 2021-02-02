@@ -62,6 +62,6 @@ However, since they don't seem to be currently working, I have made my own plott
 ```
 Plotting training statistics. On the X axis, we have the number of generations.
 ```
-![](./img/objective_function.jpg)
-![](./img/std.jpg)
-![](./img/axis_ratio.jpg)
+![](./img/objective_function.svg)
+![](./img/std.svg)
+![](./img/axis_ratio.svg)
