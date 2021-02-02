@@ -53,3 +53,15 @@ optional arguments:
   -h, --help           show this help message and exit
   --duration DURATION  duration of episode
 ```
+
+## Plotting the training
+
+The `pycma` library presents its own functionality to plot the data logged in the `/outcmaes` directory.
+However, since they don't seem to be currently working, I have made my own plotting in the `plot_cmaes.ipynb` jupyter notebook. The output is shown below.
+
+```
+Plotting training statistics. On the X axis, we have the number of generations.
+```
+![](./img/objective_function.jpg)
+![](./img/std.jpg)
+![](./img/axis_ratio.jpg)
