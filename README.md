@@ -36,7 +36,7 @@ optional arguments:
   --std STD            starting std
   --file FILE          file to save model
   --no_multiproc       disable multiprocessing
-  --logging            disable multiprocessing
+  --logging            enable cma logging
 ```
 
 Use ```test.py``` to see the model in action.
