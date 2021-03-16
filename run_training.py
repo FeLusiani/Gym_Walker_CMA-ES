@@ -67,24 +67,18 @@ def create_evaluator(duration: int, multiproc=True) -> Evaluator:
 
 
 def create_save_path(args) -> Path:
-    """
-    Generates saving path from script arguments.
-    The path will be [args.dir]/[model_name], where
-    [model_name] is either args.filename (if set),
-    or a generated name reporting the training parameters.
+    """Generates saving path given the script arguments."""
+    if args.dir:
+        dir_path = Path(args.dir)
+    else
+        dir_path = Path(__file__).parents[0] / Path('saved_models') 
 
-    Args:
-        args : arguments of the script (output of parse_args function).
-
-    Returns:
-        Path: saving path for the model
-    """
-    dir_path = Path(args.dir)
-    dir_path.mkdir(exist_ok=True)
-    filename = args.name
-    if filename is None:
+    if args.name:
+        filename = args.name
+    else:
         filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std:.2E}.pth"
-
+    
+    dir_path.mkdir(exist_ok=True)
     return Path(args.dir) / Path(filename)
 
 
@@ -93,7 +87,7 @@ parser.add_argument("--duration", help="duration of episode", type=int, default=
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
 parser.add_argument("--std", help="starting std", type=float, default=0.3)
 parser.add_argument("--name", help="filename to save model")
-parser.add_argument("--dir", help="dir path to save model", default=".")
+parser.add_argument("--dir", help="dir path to save model", default="")
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
 )
