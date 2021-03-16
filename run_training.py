@@ -1,86 +1,15 @@
 import cma
 import torch
-import gym
 from torch.nn.utils import parameters_to_vector, vector_to_parameters
-import pprint
-from multiprocessing import Pool, Queue, Manager, cpu_count
-from functools import partial
-from model import Walker_AI, eval_agent
+import gym
+from walker_cma.model import Walker_AI, eval_agent
+from walker_cma.evaluator import create_evaluator
+from walker_cma.utils import create_save_path
 import argparse
-from abc import ABC, abstractmethod
-from pathlib import Path
 
 
-# global so it can be used with multi-processing
-global agent
 agent = Walker_AI()
-# global so it can be used with multi-processing
-global env
 env = gym.make("BipedalWalker-v3")
-
-
-def eval_parameters(param, duration: int):
-    global agent
-    global env
-    env.reset()
-    vector_to_parameters(torch.Tensor(param), agent.parameters())
-    return -eval_agent(agent, env, duration)
-
-# the reason for a Evaluator object instead of just an evaluator function
-# is to avoid the creation and destruction of a Pool for parallel computing
-# at each evaluation cycle
-
-class Evaluator(ABC):
-    @abstractmethod
-    def eval(self, solutions: list) -> list:
-        raise NotImplementedError
-
-
-class _Parallel_evaluator(Evaluator):
-    def __init__(self, duration):
-        self._pool = Pool()
-        self._eval_func = partial(eval_parameters, duration=duration)
-
-    def eval(self, solutions: list) -> list:
-        function_values = self._pool.map(self._eval_func, solutions)
-        return function_values
-
-    def __del__(self):
-        self._pool.close()
-        self._pool.join()
-
-
-class _Normal_evaluator(Evaluator):
-    def __init__(self, duration):
-        self.duration = duration
-
-    def eval(self, solutions: list) -> list:
-        function_values = [eval_parameters(x, self.duration) for x in solutions]
-        return function_values
-
-
-def create_evaluator(duration: int, multiproc=True) -> Evaluator:
-    if multiproc:
-        return _Parallel_evaluator(duration)
-    else:
-        return _Normal_evaluator(duration)
-
-
-def create_save_path(args) -> Path:
-    """Generates saving path given the script arguments."""
-    if args.dir:
-        dir_path = Path(args.dir)
-    else
-        dir_path = Path(__file__).parents[0] / Path('saved_models') 
-
-    if args.name:
-        filename = args.name
-    else:
-        filename = f"walker_D{args.duration}_N{args.n_gens}_STD{args.std:.2E}.pth"
-    
-    dir_path.mkdir(exist_ok=True)
-    return Path(args.dir) / Path(filename)
-
 
 parser = argparse.ArgumentParser(description="Train model with cma-es")
 parser.add_argument("--duration", help="duration of episode", type=int, default=500)
@@ -107,7 +36,7 @@ opts = cma.CMAOptions()
 opts.set("maxiter", args.n_gens)
 
 es = cma.CMAEvolutionStrategy(x0, args.std, opts)
-evaluator = create_evaluator(args.duration, not args.no_multiproc)
+evaluator = create_evaluator(args.duration, agent, env, not args.no_multiproc)
 
 while not es.stop():
     solutions = es.ask()

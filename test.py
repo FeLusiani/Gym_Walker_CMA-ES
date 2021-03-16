@@ -2,7 +2,7 @@ import gym
 import torch
 import numpy
 from pathlib import Path
-from model import load_agent, Walker_AI
+from walker_cma.model import load_agent, Walker_AI
 import argparse
 
 parser = argparse.ArgumentParser(description="Test model")
