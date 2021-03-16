@@ -5,7 +5,7 @@ def create_save_path(args) -> Path:
     if args.dir:
         dir_path = Path(args.dir)
     else:
-        dir_path = Path(__file__).parents[0] / Path('saved_models') 
+        dir_path = Path(__file__).parents[1] / Path('saved_models') 
 
     if args.name:
         filename = args.name
