@@ -16,6 +16,7 @@ parser.add_argument("--duration", help="duration of episode", type=int, default=
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
 parser.add_argument("--std", help="starting std", type=float, default=0.3)
 parser.add_argument("--name", help="filename to save model")
+parser.add_argument("--load", help="file to load as starting solution", default="")
 parser.add_argument("--dir", help="dir path to save model", default="")
 parser.add_argument(
     "--no_multiproc", help="disable multiprocessing", action="store_true"
@@ -26,8 +27,11 @@ args = parser.parse_args()
 
 # we don't need gradient computing
 torch.set_grad_enabled(False)
-# starting solution is Walker_AI() default parameters
-x0 = parameters_to_vector(Walker_AI().parameters())
+# starting solution
+if args.load:
+    state_dict = torch.load(args.load)
+    agent.load_state_dict(state_dict)
+x0 = parameters_to_vector(agent.parameters())
 opts = cma.CMAOptions()
 # to find other CMA options use
 # pprint.pprint(cma.CMAOptions().match('[keyword]'))
