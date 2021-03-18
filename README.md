@@ -60,7 +60,7 @@ The `pycma` library presents its own functionality to plot the data logged in th
 However, since they don't seem to be currently working, I have made my own plotting in the `plot_cmaes.ipynb` jupyter notebook. The output is shown below.
 
 ```
-Plotting training statistics. On the X axis, we have the number of generations.
+Plotting training statistics.
 ```
 ![](./img/objective_function.svg)
 ![](./img/std.svg)
