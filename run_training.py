@@ -12,7 +12,7 @@ agent = Walker_AI()
 env = gym.make("BipedalWalker-v3")
 
 parser = argparse.ArgumentParser(description="Train model with cma-es")
-parser.add_argument("--duration", help="duration of episode", type=int, default=500)
+parser.add_argument("--duration", help="duration of episode", type=int, default=100)
 parser.add_argument("--n_gens", help="n of generations", type=int, default=50)
 parser.add_argument("--std", help="starting std", type=float, default=0.3)
 parser.add_argument("--name", help="filename to save model")
