@@ -1,7 +1,5 @@
 # Bipedal Walker trained with CMA-ES
 
-This is a project I'm currently working on.
-
 A feed-forward neural network is trained to pilot a [Bipedal Walker](https://gym.openai.com/envs/BipedalWalker-v2/) (one of OpenAI Gym environments) using a [CMA Evolutionary Strategy](https://en.wikipedia.org/wiki/CMA-ES) (using [pycma](https://github.com/CMA-ES/pycma) package). 
 
 ## Setup
