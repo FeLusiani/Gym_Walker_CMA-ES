@@ -8,6 +8,7 @@ A feed-forward neural network is trained to pilot a [Bipedal Walker](https://gym
 
 ### The Bipedal Walker environment
 Reward is given for moving forward, total 300+ points up to the far end. If the robot falls, it gets -100. Applying motor torque costs a small amount of points, more optimal agent will get better score. State consists of hull angle speed, angular velocity, horizontal speed, vertical speed, position of joints and joints angular speed, legs contact with ground, and 10 lidar rangefinder measurements. There's no coordinates in the state vector.
+
 ![](./images/original_walker.gif)
 
 ### The Neural Network model
@@ -103,13 +104,11 @@ Aside from the model file to load, the script takes an optional argument for the
 
 The script will show the agent acting in 10 episodes. For example, this is the behaviour of an agent trained for 50 generations on episodes of duration 200 step:
 
-![](./images/walking_cropped.mp4)
+![](/report/images/walking_cropped.gif)
 
 ### Training a saved model
 
-As described above, using the `run_training.py` script, it is possible to load a previously saved model to use as a starting solution (distribution mean) for the CMA-ES algorithm. An example is shown in the following video.
-
-![](./images/miglioramento.mp4)
+As described above, using the `run_training.py` script, it is possible to load a previously saved model to use as a starting solution (distribution mean) for the CMA-ES algorithm. You can see an example video [here](https://youtu.be/AwU9RbSOIP0).
 
 ## Visualizing the CMA-ES training
 We start with an explanation of the values printed on terminal by the `pycma` solver.
