@@ -19,7 +19,8 @@ env = gym.make("BipedalWalker-v3")
 # we don't need gradient computing
 torch.set_grad_enabled(False)
 
-for i in range(100):
+print(f'\n Testing 10 episodes, each of duration {duration} \n')
+for i in range(10):
     status = env.reset()[:14]
     state_dict = torch.load(model_file)
     agent = Walker_AI()
