@@ -2,6 +2,8 @@
 
 A feed-forward neural network is trained to pilot a [Bipedal Walker](https://gym.openai.com/envs/BipedalWalker-v2/) (one of OpenAI Gym environments) using a [CMA Evolutionary Strategy](https://en.wikipedia.org/wiki/CMA-ES) (using [pycma](https://github.com/CMA-ES/pycma) package). The feed-forward NN is implemented through [PyTorch](https://github.com/pytorch/pytorch).
 
+[**See the report**](/report/Report.md) for a full explanation of the project. Following is a quick guide on how to install and use it.
+
 ## Setup
 
 - Install Gym (and the box2 environments) from source:
