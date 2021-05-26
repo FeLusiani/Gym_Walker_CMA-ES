@@ -108,7 +108,7 @@ The script will show the agent acting in 10 episodes. For example, this is the b
 
 ### Training a saved model
 
-As described above, using the `run_training.py` script, it is possible to load a previously saved model to use as a starting solution (distribution mean) for the CMA-ES algorithm. You can see an example video [here](https://youtu.be/AwU9RbSOIP0).
+As described above, using the `run_training.py` script, it is possible to load a previously saved model to use as a starting solution (distribution mean) for the CMA-ES algorithm. You can see an [**example video here**](https://youtu.be/AwU9RbSOIP0).
 
 ## Visualizing the CMA-ES training
 We start with an explanation of the values printed on terminal by the `pycma` solver.
